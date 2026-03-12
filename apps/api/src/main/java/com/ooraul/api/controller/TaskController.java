@@ -34,21 +34,21 @@ public class TaskController {
     public ResponseEntity<List<Task>> getAllTasks() {
         List<Task> allTasks = taskService.getAllTasks();
         
-        return ResponseEntity.status(HttpStatus.OK).body(allTasks);
+        return ResponseEntity.ok().body(allTasks);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
         Task task = taskService.getTaskById(id);
         
-        return ResponseEntity.status(HttpStatus.OK).body(task);
+        return ResponseEntity.ok().body(task);
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task task) {
         Task updatedTask = taskService.updateTask(id, task);
 
-        return ResponseEntity.status(HttpStatus.OK).body(updatedTask);
+        return ResponseEntity.ok().body(updatedTask);
     }
 
     @DeleteMapping("/{id}")
