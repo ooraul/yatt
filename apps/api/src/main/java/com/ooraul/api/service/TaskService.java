@@ -2,12 +2,12 @@ package com.ooraul.api.service;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ooraul.api.entity.Task;
+import com.ooraul.api.exceptions.TaskNotFound;
 import com.ooraul.api.repository.TaskRepository;
 
 @Service
@@ -25,22 +25,17 @@ public class TaskService {
     }
 
     public Task getTaskById(Long id) {
-        Task task = taskRepository.findById(id).orElse(null);
-
-        if (task == null) throw new NoSuchElementException("No task found with ID: " + id); 
-
-        return task;
+        return taskRepository.findById(id)
+                .orElseThrow(() -> new TaskNotFound("No task found with ID: " + id));
     }
 
     public Task updateTask(Long id, Task task) {
-        Task updatedTask = taskRepository.findById(id).orElse(null);
-
-        if (updatedTask == null) throw new NoSuchElementException("No task found with ID: " + id); 
+        Task updatedTask = getTaskById(id);
 
         if (task.getDescription() != null) {
             updatedTask.setDescription(task.getDescription());
         }
-        
+
         updatedTask.setCompleted(task.isCompleted());
 
         if (task.isCompleted()) {
@@ -53,9 +48,7 @@ public class TaskService {
     }
 
     public void deleteTask(Long id) {
-        Task task = taskRepository.findById(id).orElse(null);
-
-        if (task == null) throw new NoSuchElementException("No task found with ID: " + id);
+        Task task = getTaskById(id);
 
         taskRepository.delete(task);
     }
